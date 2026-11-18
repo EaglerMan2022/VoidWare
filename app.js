@@ -1,211 +1,105 @@
-const games = [
-  { id: 'snake', title: 'Neon Snake', category: 'arcade', label: 'ARCADE', description: 'Eat, grow, and try not to run into yourself.', icon: '⌁', badge: 'CLASSIC', cover: 'snake', instructions: 'Arrow keys or WASD to move. Eat the glowing dots and avoid the walls.' },
-  { id: 'pong', title: 'Pocket Pong', category: 'arcade', label: 'ARCADE', description: 'A tiny paddle. A very determined ball.', icon: '◫', badge: '1 OR 2 PLAYERS', cover: 'pong', instructions: 'Move with W/S or ↑/↓. Player two can use I/K. First to 7 wins.' },
-  { id: '2048', title: '2048', category: 'puzzle', label: 'PUZZLE', description: 'Slide matching tiles together. How high can you get?', icon: '▦', badge: 'BRAIN BREAK', cover: '2048', instructions: 'Use the arrow keys to slide tiles. Combine matching numbers to reach 2048.' }
-];
 const grid = document.querySelector('#games-grid');
-const searchInput = document.querySelector('#game-search');
+const search = document.querySelector('#game-search');
 const emptyState = document.querySelector('#empty-state');
-const countLabel = document.querySelector('#game-count');
-const dialog = document.querySelector('#game-dialog');
-const stage = document.querySelector('#game-stage');
-const statusLabel = document.querySelector('#game-status');
+const emptyTitle = document.querySelector('#empty-title');
+const emptyMessage = document.querySelector('#empty-message');
+const clearLink = document.querySelector('#clear-link');
+const resultsCount = document.querySelector('#results-count');
+const catalogTitle = document.querySelector('#catalog-title');
+const catalogEyebrow = document.querySelector('#catalog-eyebrow');
+const catalogNote = document.querySelector('#catalog-note');
+const menu = document.querySelector('#category-menu');
+let catalog = [];
 let activeFilter = 'all';
-let activeGame = null;
-let stopCurrentGame = null;
-let favorites = new Set(JSON.parse(localStorage.getItem('voidware-favorites') || '[]'));
+let favorites = new Set();
+try { favorites = new Set(JSON.parse(localStorage.getItem('voidware-favorites') || '[]')); } catch { /* Storage may be disabled. */ }
 
-function renderGames() {
-  const query = searchInput.value.trim().toLowerCase();
-  const visible = games.filter(game => {
-    const matchesText = `${game.title} ${game.description} ${game.category}`.toLowerCase().includes(query);
-    const matchesFilter = activeFilter === 'all' || game.category === activeFilter || (activeFilter === 'favorites' && favorites.has(game.id));
-    return matchesText && matchesFilter;
+const covers = ['linear-gradient(145deg,#79d5fa,#0989d1)', 'linear-gradient(145deg,#a4e7a2,#39a65c)', 'linear-gradient(145deg,#ffcb81,#ef7049)', 'linear-gradient(145deg,#b3a5ff,#6249d7)', 'linear-gradient(145deg,#ff9db7,#eb4f83)', 'linear-gradient(145deg,#ffe880,#f39d37)', 'linear-gradient(145deg,#a3ebe4,#36aaa8)', 'linear-gradient(145deg,#a7c6ff,#4e6ed5)'];
+function escapeText(value) { return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]); }
+function getVisibleGames() {
+  const query = search.value.trim().toLocaleLowerCase();
+  return catalog.filter(game => {
+    const textMatch = `${game.name} ${game.description || ''} ${game.category || ''}`.toLocaleLowerCase().includes(query);
+    const category = String(game.category || '').toLocaleLowerCase();
+    const filterMatch = activeFilter === 'all' || (activeFilter === 'new' ? game.isNew : activeFilter === 'math' ? category === 'math' : activeFilter === 'favorites' ? favorites.has(game.id) : true);
+    return textMatch && filterMatch;
   });
-  grid.innerHTML = visible.map(game => `
-    <article class="game-card">
-      <div class="game-cover cover-${game.cover}">
-        <span class="cover-label">VOID / 00${games.indexOf(game) + 1}</span><span class="cover-badge">${game.badge}</span>
-        ${coverArt(game)}
-        <button class="favorite-button ${favorites.has(game.id) ? 'is-favorite' : ''}" data-favorite="${game.id}" type="button" aria-label="${favorites.has(game.id) ? 'Remove' : 'Add'} ${game.title} ${favorites.has(game.id) ? 'from' : 'to'} favorites" aria-pressed="${favorites.has(game.id)}">${favorites.has(game.id) ? '♥' : '♡'}</button>
-      </div>
-      <div class="game-info"><div class="game-info-top"><h3>${game.title}</h3><span class="game-type">${game.label}</span></div><p>${game.description}</p><button class="play-button" data-play="${game.id}" type="button">Play game <span aria-hidden="true">↗</span></button></div>
-    </article>`).join('');
-  countLabel.textContent = String(visible.length).padStart(2, '0');
-  emptyState.hidden = visible.length > 0;
-  grid.hidden = visible.length === 0;
 }
-function coverArt(game) {
-  if (game.id === 'snake') return '<div class="cover-snake-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="cover-food"></span>';
-  if (game.id === 'pong') return '<div class="pong-art" aria-hidden="true"><i class="pong-paddle"></i><i class="pong-paddle right"></i><i class="pong-ball"></i></div>';
-  return '<div class="tiles-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i>8</i><i></i><i></i><i></i><i></i></div>';
+function render() {
+  const visible = getVisibleGames();
+  grid.innerHTML = visible.map((game, index) => {
+    const folder = String(game.folder || '').replace(/^\/+|\/+$/g, '');
+    if (!/^[a-zA-Z0-9_-]+$/.test(folder)) return '';
+    const cover = game.cover && /^#[\da-f]{3,8}$/i.test(game.cover) ? game.cover : covers[index % covers.length];
+    const isFavorite = favorites.has(game.id);
+    const icon = escapeText(game.icon || game.name.slice(0, 1).toUpperCase());
+    return `<article class="game-card"><a class="game-link" href="games/${encodeURIComponent(folder)}/" aria-label="Play ${escapeText(game.name)}"><div class="game-cover" style="--cover:${cover}"><span class="cover-symbol" aria-hidden="true">${icon}</span><span class="cover-number">${String(index + 1).padStart(2, '0')}</span>${game.isNew ? '<span class="new-badge">NEW</span>' : ''}</div><span class="game-name">${escapeText(game.name)}</span><span class="game-category">${escapeText(game.category || 'Game')}</span></a><button class="favorite-button ${isFavorite ? 'is-favorite' : ''}" type="button" data-favorite="${escapeText(game.id)}" aria-label="${isFavorite ? 'Remove from' : 'Add to'} favorites" aria-pressed="${isFavorite}">♥</button></article>`;
+  }).join('');
+  // Only count valid entries in the catalog.
+  const count = grid.querySelectorAll('.game-card').length;
+  resultsCount.textContent = count ? `${count} ${count === 1 ? 'game' : 'games'}` : '';
+  grid.hidden = count === 0;
+  emptyState.hidden = count !== 0;
+  const hasQuery = search.value.trim().length > 0;
+  if (hasQuery) {
+    emptyTitle.textContent = 'No games found';
+    emptyMessage.textContent = 'Try a different search, or clear it to see all games.';
+    clearLink.hidden = false;
+  } else if (activeFilter === 'favorites') {
+    emptyTitle.textContent = 'No favorites yet';
+    emptyMessage.textContent = 'Tap the heart on a game to save it here.';
+    clearLink.hidden = true;
+  } else {
+    emptyTitle.textContent = 'No games yet';
+    emptyMessage.textContent = 'The game shelves are empty for now. Add a game folder to the catalog and it will appear here.';
+    clearLink.hidden = true;
+  }
+  catalogNote.hidden = count > 0 || hasQuery;
 }
+function setFilter(filter) {
+  activeFilter = filter;
+  document.querySelectorAll('[data-filter]').forEach(button => button.classList.toggle('active', button.dataset.filter === filter));
+  const titles = { all: ['Unblocked Games', 'TAKE A BREAK'], new: ['New Games', 'JUST ADDED'], math: ['Math Games', 'THINK A LITTLE'], favorites: ['Favorites', 'YOUR SAVED GAMES'] };
+  [catalogTitle.textContent, catalogEyebrow.textContent] = titles[filter] || titles.all;
+  menu.hidden = true;
+  document.querySelector('#menu-button').setAttribute('aria-expanded', 'false');
+  render();
+}
+document.querySelector('.main-nav').addEventListener('click', event => { const button = event.target.closest('[data-filter]'); if (button) setFilter(button.dataset.filter); });
+menu.addEventListener('click', event => { const button = event.target.closest('[data-filter]'); if (button) setFilter(button.dataset.filter); });
+document.querySelector('#menu-button').addEventListener('click', () => {
+  const isOpen = menu.hidden;
+  menu.hidden = !isOpen;
+  document.querySelector('#menu-button').setAttribute('aria-expanded', String(isOpen));
+});
+document.querySelector('#favorites-link').addEventListener('click', event => { event.preventDefault(); setFilter('favorites'); });
+search.addEventListener('input', () => {
+  document.querySelector('#clear-search').hidden = search.value.length === 0;
+  render();
+});
+document.querySelector('#clear-search').addEventListener('click', () => { search.value = ''; search.focus(); document.querySelector('#clear-search').hidden = true; render(); });
+clearLink.addEventListener('click', event => { event.preventDefault(); search.value = ''; document.querySelector('#clear-search').hidden = true; render(); });
 grid.addEventListener('click', event => {
-  const playButton = event.target.closest('[data-play]');
-  const favoriteButton = event.target.closest('[data-favorite]');
-  if (playButton) launchGame(playButton.dataset.play);
-  if (favoriteButton) {
-    const id = favoriteButton.dataset.favorite;
-    favorites.has(id) ? favorites.delete(id) : favorites.add(id);
-    localStorage.setItem('voidware-favorites', JSON.stringify([...favorites]));
-    renderGames();
-  }
-});
-document.querySelector('.filters').addEventListener('click', event => {
-  const button = event.target.closest('[data-filter]');
+  const button = event.target.closest('[data-favorite]');
   if (!button) return;
-  activeFilter = button.dataset.filter;
-  document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.toggle('selected', chip === button));
-  renderGames();
+  const id = button.dataset.favorite;
+  favorites.has(id) ? favorites.delete(id) : favorites.add(id);
+  try { localStorage.setItem('voidware-favorites', JSON.stringify([...favorites])); } catch { /* Favorites remain usable for this page view. */ }
+  render();
 });
-searchInput.addEventListener('input', renderGames);
-document.querySelector('#reset-filters').addEventListener('click', () => {
-  searchInput.value = '';
-  activeFilter = 'all';
-  document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.toggle('selected', chip.dataset.filter === 'all'));
-  renderGames();
-});
+document.addEventListener('click', event => { if (!menu.hidden && !menu.contains(event.target) && !event.target.closest('#menu-button')) { menu.hidden = true; document.querySelector('#menu-button').setAttribute('aria-expanded', 'false'); } });
 document.addEventListener('keydown', event => {
-  if (event.key === '/' && !dialog.open && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-    event.preventDefault(); searchInput.focus();
-  }
-  if (event.key === 'Escape' && dialog.open) closeGame();
+  if (event.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) { event.preventDefault(); search.focus(); }
+  if (event.key === 'Escape') { menu.hidden = true; document.querySelector('#menu-button').setAttribute('aria-expanded', 'false'); }
 });
-document.querySelector('#close-game').addEventListener('click', closeGame);
-document.querySelector('#restart-game').addEventListener('click', () => activeGame && launchGame(activeGame));
-document.querySelector('#fullscreen-game').addEventListener('click', async () => {
-  try { if (!document.fullscreenElement) await dialog.requestFullscreen(); else await document.exitFullscreen(); } catch { statusLabel.textContent = 'FULLSCREEN IS NOT AVAILABLE'; }
-});
-dialog.addEventListener('click', event => { if (event.target === dialog) closeGame(); });
-dialog.addEventListener('close', cleanupGame);
 document.querySelector('#year').textContent = new Date().getFullYear();
-
-function launchGame(id) {
-  const game = games.find(item => item.id === id);
-  if (!game) return;
-  cleanupGame(); activeGame = id; stage.innerHTML = '';
-  document.querySelector('#dialog-title').textContent = game.title;
-  document.querySelector('#dialog-subtitle').textContent = game.instructions;
-  document.querySelector('#dialog-icon').textContent = game.icon;
-  statusLabel.textContent = 'READY TO PLAY';
-  if (!dialog.open) dialog.showModal();
-  if (id === 'snake') stopCurrentGame = startSnake();
-  if (id === 'pong') stopCurrentGame = startPong();
-  if (id === '2048') stopCurrentGame = start2048();
-}
-function cleanupGame() {
-  if (stopCurrentGame) stopCurrentGame();
-  stopCurrentGame = null;
-  if (stage) stage.innerHTML = '';
-}
-function closeGame() { if (dialog.open) dialog.close(); activeGame = null; }
-function makeCanvas(width, height) {
-  const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
-  canvas.setAttribute('aria-label', 'Playable game canvas'); stage.append(canvas); return canvas;
-}
-function startSnake() {
-  const canvas = makeCanvas(480, 480), ctx = canvas.getContext('2d');
-  const size = 20, cells = 24;
-  let snake, direction, nextDirection, food, score, timer, over;
-  function reset() {
-    snake = [{ x: 11, y: 12 }, { x: 10, y: 12 }, { x: 9, y: 12 }]; direction = { x: 1, y: 0 }; nextDirection = direction;
-    score = 0; over = false; food = randomFood(); statusLabel.textContent = 'SCORE 00'; draw(); clearInterval(timer); timer = setInterval(tick, 115);
-  }
-  function randomFood() { let spot; do { spot = { x: Math.floor(Math.random() * cells), y: Math.floor(Math.random() * cells) }; } while (snake && snake.some(part => part.x === spot.x && part.y === spot.y)); return spot; }
-  function draw() {
-    ctx.fillStyle = '#0c1016'; ctx.fillRect(0, 0, 480, 480);
-    ctx.strokeStyle = '#ffffff08'; ctx.lineWidth = 1;
-    for (let i = 0; i <= cells; i++) { ctx.beginPath(); ctx.moveTo(i * size, 0); ctx.lineTo(i * size, 480); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, i * size); ctx.lineTo(480, i * size); ctx.stroke(); }
-    ctx.fillStyle = '#ae8bff'; ctx.shadowColor = '#ae8bff'; ctx.shadowBlur = 18; ctx.beginPath(); ctx.arc(food.x * size + 10, food.y * size + 10, 5, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-    snake.forEach((part, index) => { ctx.fillStyle = index === 0 ? '#e2ffa3' : `rgba(200,241,105,${Math.max(.24, .92 - index * .09)})`; ctx.shadowColor = '#c8f169'; ctx.shadowBlur = index === 0 ? 13 : 0; ctx.beginPath(); ctx.roundRect(part.x * size + 2, part.y * size + 2, size - 4, size - 4, 5); ctx.fill(); }); ctx.shadowBlur = 0;
-    if (over) { ctx.fillStyle = '#080a0dcc'; ctx.fillRect(0, 0, 480, 480); ctx.textAlign = 'center'; ctx.fillStyle = '#f3f2ef'; ctx.font = '600 30px Space Grotesk, sans-serif'; ctx.fillText('GAME OVER', 240, 218); ctx.fillStyle = '#c8f169'; ctx.font = '14px DM Mono, monospace'; ctx.fillText(`SCORE ${score}  ·  PRESS ENTER TO RETRY`, 240, 250); }
-  }
-  function tick() {
-    if (over) return;
-    direction = nextDirection; const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
-    const ate = head.x === food.x && head.y === food.y;
-    if (head.x < 0 || head.x >= cells || head.y < 0 || head.y >= cells || snake.slice(0, ate ? undefined : -1).some(part => part.x === head.x && part.y === head.y)) {
-      over = true; clearInterval(timer); statusLabel.textContent = `GAME OVER · SCORE ${score}`; draw(); return;
-    }
-    snake.unshift(head); if (ate) { score++; food = randomFood(); statusLabel.textContent = `SCORE ${String(score).padStart(2, '0')}`; } else snake.pop(); draw();
-  }
-  function onKey(event) {
-    const dirs = { ArrowUp: [0, -1], w: [0, -1], W: [0, -1], ArrowDown: [0, 1], s: [0, 1], S: [0, 1], ArrowLeft: [-1, 0], a: [-1, 0], A: [-1, 0], ArrowRight: [1, 0], d: [1, 0], D: [1, 0] };
-    if (dirs[event.key]) { event.preventDefault(); const [x, y] = dirs[event.key]; if (x !== -direction.x || y !== -direction.y) nextDirection = { x, y }; }
-    if (event.key === 'Enter' && over) reset();
-  }
-  window.addEventListener('keydown', onKey); reset();
-  return () => { clearInterval(timer); window.removeEventListener('keydown', onKey); };
-}
-function startPong() {
-  const canvas = makeCanvas(640, 400), ctx = canvas.getContext('2d');
-  let leftY = 160, rightY = 160, ball = { x: 320, y: 200, vx: 4, vy: 2.5 }, leftScore = 0, rightScore = 0, keys = new Set(), animation, finished = false;
-  const paddleH = 78;
-  function resetBall(direction) { ball = { x: 320, y: 200, vx: 4 * direction, vy: (Math.random() * 3 - 1.5) || 1 }; }
-  function draw() {
-    ctx.fillStyle = '#0c1016'; ctx.fillRect(0, 0, 640, 400); ctx.strokeStyle = '#ffffff20'; ctx.setLineDash([6, 8]); ctx.beginPath(); ctx.moveTo(320, 15); ctx.lineTo(320, 385); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#c8f169'; ctx.shadowColor = '#c8f169'; ctx.shadowBlur = 12; ctx.fillRect(23, leftY, 8, paddleH); ctx.fillStyle = '#ae8bff'; ctx.shadowColor = '#ae8bff'; ctx.fillRect(609, rightY, 8, paddleH); ctx.shadowBlur = 14; ctx.fillStyle = '#f4f4ef'; ctx.beginPath(); ctx.arc(ball.x, ball.y, 7, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-    ctx.textAlign = 'center'; ctx.font = '500 29px DM Mono, monospace'; ctx.fillStyle = '#c8f169'; ctx.fillText(leftScore, 270, 48); ctx.fillStyle = '#ae8bff'; ctx.fillText(rightScore, 370, 48);
-    if (finished) { ctx.fillStyle = '#080a0dcc'; ctx.fillRect(0, 0, 640, 400); ctx.fillStyle = '#f3f2ef'; ctx.font = '600 28px Space Grotesk, sans-serif'; ctx.fillText(leftScore > rightScore ? 'YOU WIN!' : 'NICE TRY!', 320, 190); ctx.fillStyle = '#c8f169'; ctx.font = '13px DM Mono, monospace'; ctx.fillText('PRESS ENTER TO PLAY AGAIN', 320, 222); }
-  }
-  function frame() {
-    if (finished) { draw(); return; }
-    if (keys.has('w') || keys.has('W') || keys.has('ArrowUp')) leftY -= 5; if (keys.has('s') || keys.has('S') || keys.has('ArrowDown')) leftY += 5;
-    // The right paddle follows the ball with a little lag, keeping solo play friendly.
-    if (ball.x > 320) rightY += Math.sign(ball.y - (rightY + paddleH / 2)) * Math.min(3.2, Math.abs(ball.y - (rightY + paddleH / 2)) * .055);
-    leftY = Math.max(0, Math.min(400 - paddleH, leftY)); rightY = Math.max(0, Math.min(400 - paddleH, rightY));
-    ball.x += ball.vx; ball.y += ball.vy;
-    if (ball.y < 8 || ball.y > 392) ball.vy *= -1;
-    if (ball.vx < 0 && ball.x < 38 && ball.y > leftY - 5 && ball.y < leftY + paddleH + 5) { ball.vx *= -1.04; ball.vy += (ball.y - leftY - paddleH / 2) * .045; }
-    if (ball.vx > 0 && ball.x > 602 && ball.y > rightY - 5 && ball.y < rightY + paddleH + 5) { ball.vx *= -1.04; ball.vy += (ball.y - rightY - paddleH / 2) * .045; }
-    if (ball.x < 0) { rightScore++; resetBall(1); } if (ball.x > 640) { leftScore++; resetBall(-1); }
-    statusLabel.textContent = `YOU ${leftScore} — ${rightScore} CPU`;
-    if (leftScore >= 7 || rightScore >= 7) finished = true;
-    draw(); animation = requestAnimationFrame(frame);
-  }
-  function onKey(event) { if (['ArrowUp', 'ArrowDown', ' '].includes(event.key)) event.preventDefault(); keys.add(event.key); if (event.key === 'Enter' && finished) { leftScore = 0; rightScore = 0; finished = false; resetBall(1); } }
-  function onUp(event) { keys.delete(event.key); }
-  window.addEventListener('keydown', onKey); window.addEventListener('keyup', onUp); frame();
-  return () => { cancelAnimationFrame(animation); window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onUp); };
-}
-function start2048() {
-  let board, score = 0, over = false;
-  const container = document.createElement('div'); container.className = 'game2048';
-  container.innerHTML = '<div class="game2048-head"><span class="game2048-score">SCORE <strong id="score2048">0</strong></span><button class="text-button" id="new2048" type="button">New game ↻</button></div><div class="game2048-grid" id="grid2048" role="grid" aria-label="2048 game board"></div><p class="game2048-hint">Use your arrow keys to slide the tiles</p>';
-  stage.append(container);
-  const boardEl = container.querySelector('#grid2048');
-  function addTile() { const open = []; board.forEach((value, i) => { if (!value) open.push(i); }); if (!open.length) return; board[open[Math.floor(Math.random() * open.length)]] = Math.random() < .9 ? 2 : 4; }
-  function render() {
-    boardEl.innerHTML = board.map(value => `<div class="tile2048" role="gridcell" data-value="${value || ''}">${value || ''}</div>`).join('');
-    container.querySelector('#score2048').textContent = score;
-    if (over) { statusLabel.textContent = 'NO MORE MOVES · START A NEW GAME'; }
-    else if (board.includes(2048)) statusLabel.textContent = '2048! KEEP GOING IF YOU LIKE';
-    else statusLabel.textContent = `SCORE ${score}`;
-  }
-  function reset() { board = Array(16).fill(0); score = 0; over = false; addTile(); addTile(); render(); }
-  function move(direction) {
-    if (over) return;
-    const previous = board.join(',');
-    for (let line = 0; line < 4; line++) {
-      let indexes = Array.from({ length: 4 }, (_, n) => direction === 'left' ? line * 4 + n : direction === 'right' ? line * 4 + (3 - n) : direction === 'up' ? n * 4 + line : (3 - n) * 4 + line);
-      let values = indexes.map(index => board[index]).filter(Boolean), merged = [];
-      for (let i = 0; i < values.length; i++) {
-        if (values[i] === values[i + 1]) { merged.push(values[i] * 2); score += values[i] * 2; i++; } else merged.push(values[i]);
-      }
-      while (merged.length < 4) merged.push(0);
-      indexes.forEach((index, i) => board[index] = merged[i]);
-    }
-    if (previous !== board.join(',')) { addTile(); if (board.every(Boolean) && !hasMove()) over = true; render(); }
-  }
-  function hasMove() { for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) { const i = y * 4 + x; if (!board[i] || (x < 3 && board[i] === board[i + 1]) || (y < 3 && board[i] === board[i + 4])) return true; } return false; }
-  function onKey(event) { const moves = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' }; if (moves[event.key]) { event.preventDefault(); move(moves[event.key]); } }
-  const newButton = container.querySelector('#new2048'); newButton.addEventListener('click', reset); window.addEventListener('keydown', onKey);
-  // Basic swipe controls make the puzzle playable on touch screens too.
-  let touchStart = null;
-  function touchDown(event) { touchStart = { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY }; }
-  function touchUp(event) { if (!touchStart) return; const dx = event.changedTouches[0].clientX - touchStart.x, dy = event.changedTouches[0].clientY - touchStart.y; if (Math.max(Math.abs(dx), Math.abs(dy)) > 25) move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up')); touchStart = null; }
-  boardEl.addEventListener('touchstart', touchDown, { passive: true }); boardEl.addEventListener('touchend', touchUp, { passive: true });
-  reset();
-  return () => { window.removeEventListener('keydown', onKey); newButton.removeEventListener('click', reset); };
-}
-renderGames();
+fetch('./games/catalog.json').then(response => { if (!response.ok) throw new Error('Catalog could not be loaded'); return response.json(); }).then(data => {
+  if (!Array.isArray(data)) throw new Error('Catalog must be a JSON array');
+  catalog = data.filter(game => game && typeof game.id === 'string' && typeof game.name === 'string' && typeof game.folder === 'string');
+  render();
+}).catch(() => {
+  catalog = [];
+  emptyMessage.textContent = 'The game list could not be loaded. Run this site from a web server and try again.';
+  catalogNote.hidden = true;
+  render();
+});

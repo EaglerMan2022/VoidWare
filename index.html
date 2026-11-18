@@ -3,92 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0d13">
-  <meta name="description" content="VoidWare is a pocket-sized arcade of free, browser-playable games. Pick a game and jump right in.">
-  <title>VoidWare — Play something</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#f6f7fb">
+  <meta name="description" content="VoidWare — a simple, searchable arcade of browser games.">
+  <title>VoidWare — Unblocked Games</title>
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
 <body>
-  <div class="site-shell">
-    <header class="topbar">
-      <a class="brand" href="#home" aria-label="VoidWare home">
-        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
-        <span>void<span class="brand-light">ware</span></span>
-      </a>
-      <nav class="top-nav" aria-label="Main navigation">
-        <a class="nav-link active" href="#games">Arcade</a>
-        <a class="nav-link" href="#about">About</a>
-      </nav>
-      <a href="#games" class="top-cta">Find a game <span aria-hidden="true">↗</span></a>
-    </header>
-
-    <main id="home">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <div class="eyebrow"><span class="status-dot"></span> YOUR NEXT BREAK STARTS HERE</div>
-          <h1 id="hero-title">A little play<br>goes a <span class="gradient-text">long way.</span></h1>
-          <p class="hero-description">Quick games. Zero downloads. Just pick a game and get into it.</p>
-          <a class="primary-button" href="#games">Explore the arcade <span aria-hidden="true">↓</span></a>
-          <div class="hero-note"><span class="note-icon">✳</span> Made for the in-between moments.</div>
-        </div>
-        <div class="hero-art" aria-label="Decorative arcade illustration">
-          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-          <div class="art-star star-one">✳</div><div class="art-star star-two">✦</div>
-          <div class="arcade-card">
-            <div class="arcade-card-top"><span>VOID / 001</span><span class="live-pill"><i></i> READY</span></div>
-            <div class="arcade-board">
-              <div class="board-grid"></div>
-              <div class="board-snake"><b></b><b></b><b></b><b></b></div>
-              <div class="board-food"></div>
-              <div class="board-caption">PLAY<br>YOUR WAY<span>_</span></div>
-            </div>
-            <div class="arcade-card-bottom"><span>INSERT COFFEE</span><span>NO COINS NEEDED ↗</span></div>
-          </div>
-          <div class="float-chip chip-top">✦ &nbsp; GOOD VIBES ONLY</div>
-          <div class="float-chip chip-bottom"><span>3</span> games and counting</div>
-        </div>
-        <div class="hero-index"><span>01</span> / THE ARCADE</div>
-      </section>
-
-      <section class="arcade-section" id="games" aria-labelledby="games-title">
-        <div class="section-heading">
-          <div><div class="eyebrow muted-eyebrow">PICK YOUR DISTRACTION</div><h2 id="games-title">The arcade<span class="heading-period">.</span></h2></div>
-          <div class="game-count"><span id="game-count">03</span> GAMES / ALL FREE</div>
-        </div>
-        <div class="toolbar">
-          <label class="search-box" for="game-search"><span class="search-icon" aria-hidden="true">⌕</span><input id="game-search" type="search" placeholder="Search games..." autocomplete="off"><kbd>/</kbd></label>
-          <div class="filters" role="group" aria-label="Filter games">
-            <button class="filter-chip selected" data-filter="all" type="button">All games <span>03</span></button>
-            <button class="filter-chip" data-filter="arcade" type="button">Arcade</button>
-            <button class="filter-chip" data-filter="puzzle" type="button">Puzzle</button>
-            <button class="filter-chip" data-filter="favorites" type="button"><span aria-hidden="true">♡</span> Favorites</button>
-          </div>
-        </div>
-        <div class="games-grid" id="games-grid" aria-live="polite"></div>
-        <div class="empty-state" id="empty-state" hidden><span>◌</span><h3>No games found</h3><p>Try another search or filter.</p><button class="text-button" id="reset-filters" type="button">Clear filters ↗</button></div>
-        <div class="section-foot"><span>MORE GAMES ARE ON THE WAY</span><span class="foot-line"></span><span>STAY CURIOUS <b>✳</b></span></div>
-      </section>
-
-      <section class="about-section" id="about">
-        <div class="about-symbol" aria-hidden="true">V<span>✳</span></div>
-        <div><div class="eyebrow muted-eyebrow">SMALL GAMES, BIG BREAKS</div><h2>A tiny corner<br>of the internet<br>for <span class="gradient-text">having fun.</span></h2></div>
-        <div class="about-aside"><p>VoidWare is a growing collection of lightweight games that run right here in your browser. No installs, no accounts—just a good little game whenever you need one.</p><a href="#games" class="text-button">Back to the games <span>↑</span></a></div>
-      </section>
-    </main>
-
-    <footer class="footer"><a class="brand footer-brand" href="#home"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>void<span class="brand-light">ware</span></span></a><span>BUILT FOR THE LOVE OF PLAY <b>✳</b></span><span>© <span id="year"></span> VOIDWARE</span></footer>
-  </div>
-
-  <dialog class="game-dialog" id="game-dialog" aria-labelledby="dialog-title">
-    <div class="dialog-inner">
-      <header class="dialog-header"><div class="dialog-game-title"><span class="dialog-game-icon" id="dialog-icon">✳</span><div><h2 id="dialog-title">Game title</h2><p id="dialog-subtitle">Game instructions</p></div></div><div class="dialog-actions"><button class="icon-button" id="restart-game" type="button" aria-label="Restart game" title="Restart game">↻</button><button class="icon-button" id="fullscreen-game" type="button" aria-label="Toggle fullscreen" title="Toggle fullscreen">⛶</button><button class="icon-button close-button" id="close-game" type="button" aria-label="Close game" title="Close game">×</button></div></header>
-      <div class="game-stage" id="game-stage"></div>
-      <div class="dialog-footer"><span id="game-status">READY TO PLAY</span><span>ESC TO CLOSE <b>·</b> HAVE FUN</span></div>
-    </div>
-  </dialog>
+  <header class="topbar">
+    <button class="menu-button" id="menu-button" type="button" aria-label="Open game categories" aria-expanded="false" aria-controls="category-menu"><span></span><span></span><span></span></button>
+    <a class="brand" href="./" aria-label="VoidWare home"><span class="brand-icon" aria-hidden="true">V</span><span>void<span class="brand-ware">ware</span></span></a>
+    <form class="search-form" id="search-form" role="search"><label class="visually-hidden" for="game-search">Search games</label><input id="game-search" type="search" placeholder="Search games" autocomplete="off"><button type="button" id="clear-search" class="clear-search" aria-label="Clear search" hidden>×</button></form>
+    <nav class="main-nav" aria-label="Game categories">
+      <button class="nav-link" type="button" data-filter="new">New Games</button>
+      <button class="nav-link active" type="button" data-filter="all">Unblocked Games</button>
+      <button class="nav-link" type="button" data-filter="math">Math Games</button>
+    </nav>
+    <a class="favorites-link" href="#games" id="favorites-link"><span aria-hidden="true">♥</span> Favorites</a>
+    <div class="category-menu" id="category-menu" hidden><button type="button" data-filter="all">All games</button><button type="button" data-filter="new">New games</button><button type="button" data-filter="math">Math games</button><button type="button" data-filter="favorites">Favorites</button></div>
+  </header>
+  <main>
+    <section class="catalog" id="games" aria-label="Game catalog">
+      <div class="catalog-heading"><div><p class="eyebrow" id="catalog-eyebrow">TAKE A BREAK</p><h1 id="catalog-title">Unblocked Games</h1></div><p class="results-count" id="results-count" aria-live="polite"></p></div>
+      <div class="games-grid" id="games-grid" aria-live="polite"></div>
+      <section class="empty-state" id="empty-state" hidden><div class="empty-icon" aria-hidden="true">⌕</div><h2 id="empty-title">No games yet</h2><p id="empty-message">The game shelves are empty for now. Add a game folder to the catalog and it will appear here.</p><a class="clear-link" id="clear-link" href="#games" hidden>Clear search <span>↗</span></a></section>
+      <p class="catalog-note" id="catalog-note">New games will show up here as the arcade grows.</p>
+    </section>
+  </main>
+  <footer class="footer"><a class="footer-brand" href="./">void<span>ware</span></a><span>Just games. No downloads.</span><span>© <span id="year"></span> VOIDWARE</span></footer>
 </body>
 </html>
