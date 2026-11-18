@@ -6,23 +6,25 @@
   <meta name="theme-color" content="#f6f7fb">
   <meta name="description" content="VoidWare — a simple, searchable arcade of browser games.">
   <title>VoidWare — Unblocked Games</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=gba-catalog-2">
+  <script src="app.js?v=gba-catalog-2" defer></script>
 </head>
 <body>
   <header class="topbar">
     <button class="menu-button" id="menu-button" type="button" aria-label="Open game menu" aria-expanded="false" aria-controls="category-menu"><span></span><span></span><span></span></button>
     <a class="brand" href="./" aria-label="VoidWare home"><span class="brand-icon" aria-hidden="true">V</span><span>void<span class="brand-ware">ware</span></span></a>
-    <form class="search-form" role="search" onsubmit="return false"><label class="visually-hidden" for="game-search">Search games</label><input id="game-search" type="search" placeholder="Search games" autocomplete="off"><button type="button" id="clear-search" class="clear-search" aria-label="Clear search" hidden>×</button></form>
+    <form class="search-form" role="search"><label class="visually-hidden" for="game-search">Search games</label><input id="game-search" type="search" placeholder="Search games" autocomplete="off"><button type="button" id="clear-search" class="clear-search" aria-label="Clear search" hidden>×</button></form>
     <nav class="main-nav" aria-label="Game sections"><button class="nav-link" type="button" data-filter="new">New Games</button><button class="nav-link active" type="button" data-filter="all">Unblocked Games</button></nav>
-    <div class="category-menu" id="category-menu" hidden><button type="button" data-filter="all">All games</button><button type="button" data-filter="new">New games</button></div>
+    <div class="category-menu" id="category-menu" hidden><button type="button" data-filter="all">All games</button><button type="button" data-filter="new">New games</button><a href="games/gba/">GBA Emulator</a></div>
   </header>
   <main>
     <section class="catalog" id="games" aria-label="Game catalog">
-      <div class="catalog-heading"><div><p class="eyebrow" id="catalog-eyebrow">TAKE A BREAK</p><h1 id="catalog-title">Unblocked Games</h1></div><p class="results-count" id="results-count" aria-live="polite"></p></div>
-      <div class="games-grid" id="games-grid" aria-live="polite"></div>
-      <section class="empty-state" id="empty-state" hidden><div class="empty-icon" aria-hidden="true">⌕</div><h2 id="empty-title">No games yet</h2><p id="empty-message">The game shelves are empty for now. Add a game folder to the catalog and it will appear here.</p><a class="clear-link" id="clear-link" href="#games" hidden>Clear search <span>↗</span></a></section>
-      <p class="catalog-note" id="catalog-note">New games will show up here as the arcade grows.</p>
+      <div class="catalog-heading"><div><p class="eyebrow" id="catalog-eyebrow">TAKE A BREAK</p><h1 id="catalog-title">Unblocked Games</h1></div><p class="results-count" id="results-count" aria-live="polite">1 game</p></div>
+      <div class="games-grid" id="games-grid" aria-live="polite">
+        <article class="game-card" data-game-card data-name="gba emulator game boy advance emulator play a game boy advance game you provide"><a class="game-link" href="games/gba/" aria-label="Play GBA Emulator"><div class="game-cover has-image" style="--cover:#fff"><img class="game-cover-image" src="games/gba/icon.svg" alt="" width="256" height="256"><span class="new-badge">NEW</span></div><span class="game-name">GBA Emulator</span><span class="game-category">Emulator</span></a></article>
+      </div>
+      <section class="empty-state" id="empty-state" hidden><div class="empty-icon" aria-hidden="true">⌕</div><h2 id="empty-title">No games found</h2><p id="empty-message">Try a different search, or clear it to see all games.</p><a class="clear-link" id="clear-link" href="#games">Clear search <span>↗</span></a></section>
+      <p class="catalog-note" id="catalog-note" hidden>New games will show up here as the arcade grows.</p>
     </section>
   </main>
   <footer class="footer"><a class="footer-brand" href="./">void<span>ware</span></a><span>Just games. No downloads.</span><span>© <span id="year"></span> VOIDWARE</span></footer>
