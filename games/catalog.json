@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "gba-emulator",
+    "name": "GBA Emulator",
+    "folder": "gba",
+    "category": "Emulator",
+    "description": "Play a Game Boy Advance game you provide.",
+    "image": "games/gba/icon.svg",
+    "isNew": true
+  }
+]

@@ -11,16 +11,11 @@
 </head>
 <body>
   <header class="topbar">
-    <button class="menu-button" id="menu-button" type="button" aria-label="Open game categories" aria-expanded="false" aria-controls="category-menu"><span></span><span></span><span></span></button>
+    <button class="menu-button" id="menu-button" type="button" aria-label="Open game menu" aria-expanded="false" aria-controls="category-menu"><span></span><span></span><span></span></button>
     <a class="brand" href="./" aria-label="VoidWare home"><span class="brand-icon" aria-hidden="true">V</span><span>void<span class="brand-ware">ware</span></span></a>
-    <form class="search-form" id="search-form" role="search"><label class="visually-hidden" for="game-search">Search games</label><input id="game-search" type="search" placeholder="Search games" autocomplete="off"><button type="button" id="clear-search" class="clear-search" aria-label="Clear search" hidden>×</button></form>
-    <nav class="main-nav" aria-label="Game categories">
-      <button class="nav-link" type="button" data-filter="new">New Games</button>
-      <button class="nav-link active" type="button" data-filter="all">Unblocked Games</button>
-      <button class="nav-link" type="button" data-filter="math">Math Games</button>
-    </nav>
-    <a class="favorites-link" href="#games" id="favorites-link"><span aria-hidden="true">♥</span> Favorites</a>
-    <div class="category-menu" id="category-menu" hidden><button type="button" data-filter="all">All games</button><button type="button" data-filter="new">New games</button><button type="button" data-filter="math">Math games</button><button type="button" data-filter="favorites">Favorites</button></div>
+    <form class="search-form" role="search" onsubmit="return false"><label class="visually-hidden" for="game-search">Search games</label><input id="game-search" type="search" placeholder="Search games" autocomplete="off"><button type="button" id="clear-search" class="clear-search" aria-label="Clear search" hidden>×</button></form>
+    <nav class="main-nav" aria-label="Game sections"><button class="nav-link" type="button" data-filter="new">New Games</button><button class="nav-link active" type="button" data-filter="all">Unblocked Games</button></nav>
+    <div class="category-menu" id="category-menu" hidden><button type="button" data-filter="all">All games</button><button type="button" data-filter="new">New games</button></div>
   </header>
   <main>
     <section class="catalog" id="games" aria-label="Game catalog">

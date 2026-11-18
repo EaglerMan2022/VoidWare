@@ -1,21 +1,13 @@
 # VoidWare
 
-VoidWare is a small, responsive browser arcade built with plain HTML, CSS, and JavaScript. No build step or external game embeds are required.
+VoidWare is a lightweight, responsive browser-games catalog built with plain HTML, CSS, and JavaScript. Serve the repository with a static web server (for example `python3 -m http.server`) so the game catalog JSON can be fetched.
 
-## Run locally
+## Add a game
 
-Open `index.html` in a modern browser, or serve this folder with any static file server:
+1. Make a folder under `games/` with an `index.html` game page.
+2. Add an entry to `games/catalog.json` with an ID, display name, matching folder name, category, and optional description/icon/image.
+3. The homepage search matches the game name, description, and category. `isNew: true` also lists the game in New Games.
 
-```sh
-python3 -m http.server 8000
-```
+## GBA Emulator
 
-Then visit `http://localhost:8000`.
-
-## Included games
-
-- **Neon Snake** — keyboard-controlled arcade classic.
-- **Pocket Pong** — play against a friendly CPU paddle.
-- **2048** — keyboard and touch-friendly number puzzle.
-
-The arcade includes live search, category filters, locally saved favorites, restart, and fullscreen controls. Favorites are saved in the browser's local storage.
+The GBA Emulator page (`games/gba/`) accepts a `.gba` file selected from the visitor's device and starts EmulatorJS in the browser. VoidWare does not include or distribute ROMs or BIOS files. Visitors should only load game files they created or are legally allowed to use. The ROM is selected as a local file and is not uploaded to VoidWare; the EmulatorJS runtime is loaded from its CDN when launched. Internet access is needed for that runtime.

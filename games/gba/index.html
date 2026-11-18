@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <meta name="description" content="Play a Game Boy Advance game you own in your browser. The ROM stays on your device.">
+  <title>GBA Emulator — VoidWare</title>
+  <link rel="stylesheet" href="gba.css">
+  <script src="gba.js" defer></script>
+</head>
+<body>
+  <main class="emulator-page">
+    <header class="emulator-header"><a class="brand" href="../../"><span class="brand-icon">V</span><span>void<span class="brand-ware">ware</span></span></a><a class="back-link" href="../../">← All games</a></header>
+    <section class="emulator-card" aria-labelledby="page-title">
+      <div class="card-heading"><img src="icon.svg" alt="" class="page-icon"><div><p class="eyebrow">VOIDWARE ARCADE</p><h1 id="page-title">GBA Emulator</h1></div></div>
+      <p class="intro">Choose a Game Boy Advance ROM file from your device, then launch it here in your browser.</p>
+      <div class="legal-note"><strong>Use games you have the right to play.</strong> Only select ROMs you created or are legally permitted to use. VoidWare does not provide ROMs or BIOS files. Your selected file is read by this page; it is not uploaded to VoidWare's server.</div>
+      <form id="rom-form">
+        <label class="file-label" for="rom-file"><span class="upload-icon" aria-hidden="true">↑</span><span class="file-copy"><strong>Choose a GBA file</strong><small>Local .gba file · not uploaded</small></span><span class="browse-button">Browse</span></label>
+        <input id="rom-file" type="file" accept=".gba,application/octet-stream" required>
+        <p id="file-name" class="file-name" aria-live="polite">No game selected</p>
+        <button id="launch-button" class="launch-button" type="submit" disabled>Launch GBA <span aria-hidden="true">→</span></button>
+      </form>
+      <p id="status" class="status" role="status" aria-live="polite">Select a .gba file to get started.</p>
+      <section class="player-shell" id="player-shell" hidden aria-label="Game Boy Advance emulator">
+        <div class="player-toolbar"><span>GAME BOY ADVANCE</span><button type="button" id="close-player" class="close-player">Close game</button></div>
+        <div id="game" class="player" aria-label="Emulator display"></div>
+      </section>
+      <p class="privacy-note">The emulator engine is loaded from the EmulatorJS CDN when you launch a game. ROM files are selected locally and are not sent to VoidWare.</p>
+    </section>
+    <footer>Only load ROM files you have the legal right to use.</footer>
+  </main>
+</body>
+</html>
