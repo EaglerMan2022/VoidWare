@@ -7,5 +7,14 @@
     "description": "Play a Game Boy Advance game you provide.",
     "image": "games/gba/icon.svg",
     "isNew": true
+  },
+  {
+    "id": "among-us-fangame",
+    "name": "Among Us Fangame",
+    "folder": "among-us-fangame",
+    "category": "Arcade",
+    "description": "Play the Among Us fangame.",
+    "image": "games/game9/Screenshot%202026-11-19%20002235.png",
+    "isNew": true
   }
 ]
