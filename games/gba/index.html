@@ -27,7 +27,13 @@
         <div class="player-toolbar"><span>GAME BOY ADVANCE</span><button type="button" id="close-player" class="close-player">Close game</button></div>
         <div id="game" class="player" aria-label="Emulator display"></div>
       </section>
-      <p class="privacy-note">The emulator engine is loaded from the EmulatorJS CDN when you launch a game. ROM files are selected locally and are not sent to VoidWare.</p>
+      <section class="rom-library" aria-labelledby="rom-library-title">
+        <div class="library-heading"><div><p class="eyebrow">VOIDWARE FILES</p><h2 id="rom-library-title">GBA files</h2></div><button id="refresh-roms" class="refresh-button" type="button">Refresh</button></div>
+        <p class="library-note">Files stored in <code>games/gba/gbafiles/</code>, sorted alphabetically. Only download files you have the legal right to use.</p>
+        <p id="rom-library-status" class="library-status" role="status" aria-live="polite">Loading GBA files…</p>
+        <ul id="rom-list" class="rom-list" aria-label="Available GBA files"></ul>
+      </section>
+      <p class="privacy-note">The emulator engine is loaded from the EmulatorJS CDN when you launch a game. Files you select are read locally. The GBA file list is read from this site's public GitHub repository.</p>
     </section>
     <footer>Only load ROM files you have the legal right to use.</footer>
   </main>
