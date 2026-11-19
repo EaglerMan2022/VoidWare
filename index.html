@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#f6f7fb">
   <meta name="description" content="VoidWare — a simple, searchable arcade of browser games.">
   <title>VoidWare — Unblocked Games</title>
-  <link rel="stylesheet" href="styles.css?v=among-us-card-1">
-  <script src="app.js?v=among-us-card-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=sm64-card-1">
+  <script src="app.js?v=sm64-card-1" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -15,14 +15,15 @@
     <a class="brand" href="./" aria-label="VoidWare home"><span class="brand-icon" aria-hidden="true">V</span><span>void<span class="brand-ware">ware</span></span></a>
     <form class="search-form" role="search"><label class="visually-hidden" for="game-search">Search games</label><input id="game-search" type="search" placeholder="Search games" autocomplete="off"><button type="button" id="clear-search" class="clear-search" aria-label="Clear search" hidden>×</button></form>
     <nav class="main-nav" aria-label="Game sections"><button class="nav-link" type="button" data-filter="new">New Games</button><button class="nav-link active" type="button" data-filter="all">Unblocked Games</button></nav>
-    <div class="category-menu" id="category-menu" hidden><button type="button" data-filter="all">All games</button><button type="button" data-filter="new">New games</button><a href="games/gba/">GBA Emulator</a><a href="games/among-us-fangame/">Among Us Fangame</a></div>
+    <div class="category-menu" id="category-menu" hidden><button type="button" data-filter="all">All games</button><button type="button" data-filter="new">New games</button><a href="games/gba/">GBA Emulator</a><a href="games/among-us-fangame/">Among Us Fangame</a><a href="games/game8/sm-64.html">SM64</a></div>
   </header>
   <main>
     <section class="catalog" id="games" aria-label="Game catalog">
-      <div class="catalog-heading"><div><p class="eyebrow" id="catalog-eyebrow">TAKE A BREAK</p><h1 id="catalog-title">Unblocked Games</h1></div><p class="results-count" id="results-count" aria-live="polite">2 games</p></div>
+      <div class="catalog-heading"><div><p class="eyebrow" id="catalog-eyebrow">TAKE A BREAK</p><h1 id="catalog-title">Unblocked Games</h1></div><p class="results-count" id="results-count" aria-live="polite">3 games</p></div>
       <div class="games-grid" id="games-grid" aria-live="polite">
         <article class="game-card" data-game-card data-new="true" data-name="gba emulator game boy advance emulator play a game boy advance game you provide"><a class="game-link" href="games/gba/" aria-label="Play GBA Emulator"><div class="game-cover has-image" style="--cover:#fff"><img class="game-cover-image" src="games/gba/icon.svg" alt="" width="256" height="256"><span class="new-badge">NEW</span></div><span class="game-name">GBA Emulator</span><span class="game-category">Emulator</span></a></article>
         <article class="game-card" data-game-card data-new="true" data-name="among us among us fangame arcade crewmate"><a class="game-link" href="games/among-us-fangame/" aria-label="Play Among Us Fangame"><div class="game-cover has-image" style="--cover:#fff"><img class="game-cover-image" src="games/game9/Screenshot%202026-11-19%20002235.png" alt="" width="256" height="256"><span class="new-badge">NEW</span></div><span class="game-name">Among Us Fangame</span><span class="game-category">Arcade</span></a></article>
+        <article class="game-card" data-game-card data-new="true" data-name="sm64 super mario 64 adventure platformer"><a class="game-link" href="games/game8/sm-64.html" aria-label="Play SM64"><div class="game-cover has-image" style="--cover:#fff"><img class="game-cover-image" src="games/game8/OIP.png" alt="" width="256" height="256"><span class="new-badge">NEW</span></div><span class="game-name">SM64</span><span class="game-category">Adventure</span></a></article>
       </div>
       <section class="empty-state" id="empty-state" hidden><div class="empty-icon" aria-hidden="true">⌕</div><h2 id="empty-title">No games found</h2><p id="empty-message">Try a different search, or clear it to see all games.</p><a class="clear-link" id="clear-link" href="#games">Clear search <span>↗</span></a></section>
       <p class="catalog-note" id="catalog-note" hidden>New games will show up here as the arcade grows.</p>

@@ -16,5 +16,14 @@
     "description": "Play the Among Us fangame.",
     "image": "games/game9/Screenshot%202026-11-19%20002235.png",
     "isNew": true
+  },
+  {
+    "id": "sm64",
+    "name": "SM64",
+    "folder": "game8",
+    "category": "Adventure",
+    "description": "Jump into a classic 3D platform adventure.",
+    "image": "games/game8/OIP.png",
+    "isNew": true
   }
 ]
